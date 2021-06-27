@@ -1,0 +1,11 @@
+list:
+  description: 'shows contents as row/column'
+  allOf:
+    -$ref: '../container.yaml#/container'
+  properties:
+    direction:
+        type: string
+        description: in what direction content should be listed
+        enum:
+        - row
+        - column

@@ -1,0 +1,12 @@
+# string contents
+textcontent:      
+  description: 'base for numeric contents'
+  allOf:
+    -$ref:  '../content.yaml#/content'
+  properties:
+    fontSize:
+      type: integer
+      format: int32
+      nullable: true
+      description: 'size of text for display'
+    # TODO: formatType, bold/italic, multiple...       

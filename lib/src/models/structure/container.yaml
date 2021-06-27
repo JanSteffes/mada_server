@@ -1,0 +1,9 @@
+# base for containers
+container:
+  description: 'contains one or multiple widgets'
+  allOf:
+    -$ref: 'widget.yaml#/widget'
+  properties:
+    children:
+      $ref: 'widget.yaml#/widget'
+      description: 'children of this container' 

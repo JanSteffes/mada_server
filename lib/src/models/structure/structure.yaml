@@ -1,0 +1,14 @@
+structure:
+  properties:
+    name:
+      type: string
+      description: 'name of this structure'
+    description:
+      type: string
+      description: '(Usage-)description for this structure'
+    version:
+      type: string
+      description: 'versioncode of this structure'
+    # contents:
+    #   $ref: 'content.yaml#/content'
+    #   description: 'contentfields of this structure' 

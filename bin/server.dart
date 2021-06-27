@@ -1,34 +1,18 @@
-import 'dart:io';
+import 'package:logging/logging.dart';
+import 'package:logging_appenders/logging_appenders.dart';
+import 'package:openapi_base/openapi_base.dart';
 
-import 'package:args/args.dart';
-import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf/shelf_io.dart' as io;
-
-// For Google Cloud Run, set _hostname to '0.0.0.0'.
+final _logger = Logger('example_server');
 const _hostname = 'localhost';
 
-void main(List<String> args) async {
-  var parser = ArgParser()..addOption('port', abbr: 'p');
-  var result = parser.parse(args);
-
-  // For Google Cloud Run, we respect the PORT environment variable
-  var portStr = result['port'] ?? Platform.environment['PORT'] ?? '8080';
-  var port = int.tryParse(portStr);
-
-  if (port == null) {
-    stdout.writeln('Could not parse port value "$portStr" into a number.');
-    // 64: command line usage error
-    exitCode = 64;
-    return;
-  }
-
-  var handler = const shelf.Pipeline()
-      .addMiddleware(shelf.logRequests())
-      .addHandler(_echoRequest);
-
-  var server = await io.serve(handler, _hostname, port);
-  print('Serving at http://${server.address.host}:${server.port}');
+Future<void> main() async {
+  // PrintAppender.setupLogging();
+  // _logger.info('Starting Server ...');
+  // final server = OpenApiShelfServer(
+  //   TestApiRouter(ApiEndpointProvider.static(TestApiImpl())),
+  // );
+  // final process = await server.startServer(address: _hostname);
+  // _logger.fine('startServer finished.');
+  // final exitCode = await process.exitCode;
+  // _logger.fine('exitCode from process: $exitCode');
 }
-
-shelf.Response _echoRequest(shelf.Request request) =>
-    shelf.Response.ok('Request for "${request.url}"');

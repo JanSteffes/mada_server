@@ -1,0 +1,4 @@
+ content:
+  allOf:
+    -$ref: 'widget.yaml#/widget'
+    

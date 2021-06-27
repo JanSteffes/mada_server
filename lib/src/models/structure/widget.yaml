@@ -1,0 +1,10 @@
+# base for everything to be shown
+widget:
+  description: 'base for everything to be shown'
+  properties:
+    name:
+      type: string
+      description: name of the widget
+    description:
+      type: string
+      description: description of this widget (e.g. how it looks/what it represents)
