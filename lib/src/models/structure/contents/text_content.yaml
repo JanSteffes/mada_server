@@ -2,7 +2,7 @@
 textcontent:      
   description: 'base for numeric contents'
   allOf:
-    -$ref:  '../content.yaml#/content'
+    -$ref:  '../content.yaml#/Content'
   properties:
     fontSize:
       type: integer

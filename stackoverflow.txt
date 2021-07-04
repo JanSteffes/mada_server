@@ -1,0 +1,124 @@
+I'm using the [openapi-codebuilder][1] in dart and i'm now trying to split my definition(s) into multiple files, like this:
+
+structure_management.openapi.yaml:
+
+    openapi: 3.0.0
+    info:
+      version: 0.1.0
+      title: Manage structurs for content
+      x-dart-name: structure_management    
+    
+    paths:  
+      /structures/{category}:
+        get:
+          parameters:
+            - name: category
+              required: true
+              description: 'category the structure is assigned to'
+              in: path
+              schema:
+                type: string
+          summary: returns names of current available structures
+          responses:
+            '200':
+              description: OK
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: '..\models\structure\structure.yaml#/Structure'
+            '404':
+              description: 'no structure found (if category was given: non found in that category)'     
+
+structure.yaml (in relative path as specified in the $ref above):
+
+    Structure:
+      properties:
+        name:
+          type: string
+          description: 'name of this structure'
+        description:
+          type: string
+          description: '(Usage-)description for this structure'
+        version:
+          type: string
+          description: 'versioncode of this structure'
+
+In visual studio code, i can ctrl + click on the link in $ref and am taken to my structure file, but if i try to build using the command
+
+    dart run build_runner build --delete-conflicting-outputs 
+
+i'm getting errors, that the structure cannot be found in the given file
+
+    [INFO] Generating build script completed, took 430ms
+    [INFO] Reading cached asset graph completed, took 61ms
+    [INFO] Checking for updates since last build completed, took 480ms
+    [SEVERE] openapi_code_builder:openapi_code_builder on lib/src/api/structure_management.openapi.yaml:
+    
+    Invalid argument(s): Invalid document. Reference '#/Structure' does not exist in document.
+    [INFO] Running build completed, took 60ms
+    [INFO] Caching finalized dependency graph completed, took 42ms
+    [SEVERE] Failed after 118ms
+
+using verbose output doesn't help that much more, at least for me:
+
+    dart run build_runner build --delete-conflicting-outputs --verbose
+    [INFO] Entrypoint:Generating build script...
+    [INFO] Entrypoint:Generating build script completed, took 453ms
+    
+    [INFO] BuildDefinition:Initializing inputs
+    [INFO] BuildDefinition:Reading cached asset graph...
+    [INFO] BuildDefinition:Reading cached asset graph completed, took 86ms
+    
+    [INFO] BuildDefinition:Checking for updates since last build...
+    [INFO] BuildDefinition:Checking for updates since last build completed, took 2.5s
+    
+    [INFO] Build:Running build...
+    [SEVERE] openapi_code_builder:openapi_code_builder on lib/src/api/structure_management.openapi.yaml:
+    
+    Invalid argument(s): Invalid document. Reference '#/Structure' does not exist in document.
+    package:codable_forked/src/keyed_archive.dart 191:9                 KeyedArchive.resolveOrThrow     
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach     
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow     
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 198:13                KeyedArchive.resolveOrThrow.<fn>
+    dart:collection                                                     _LinkedHashMapMixin.forEach
+    package:codable_forked/src/keyed_archive.dart 196:10                KeyedArchive.resolveOrThrow
+    package:codable_forked/src/keyed_archive.dart 42:15                 KeyedArchive.unarchive
+    package:open_api_forked/src/v3/document.dart 15:25                  new APIDocument.fromMap
+    package:openapi_code_builder/src/openapi_code_builder.dart 1236:29  OpenApiCodeBuilderUtils.loadApiFromYaml
+    package:openapi_code_builder/src/openapi_code_builder.dart 1273:29  OpenApiCodeBuilder.build
+    
+    [INFO] Build:Running build completed, took 115ms
+    
+    [INFO] Build:Caching finalized dependency graph...
+    [INFO] Build:Caching finalized dependency graph completed, took 39ms
+    
+    [SEVERE] Build:
+    Failed after 171ms
+
+For reference on how to use $ref, i used https://swagger.io/docs/specification/using-ref/ and https://davidgarcia.dev/posts/how-to-split-open-api-spec-into-multiple-files/ , but didn't find much more information / example on my use-case. Most seem to use some java generator.
+
+Am i using $ref wrong here? If i keep the structure in the same document and reference it locally the generation works, but i plan to pump it up by more and more models and would like to specify them all in their own files.
+
+  [1]: https://pub.dev/packages/openapi_code_builder

@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title: Manage structurs
+  description: api to manage structures that hold content
+  x-dart-name: structure_management
+servers:
+  - url: 'http://steffes.xyz'
+    description: prod server
+  - url: "http://localhost:8080"
+    description: local debug server
+components:
+  securitySchemes:
+      BasicAuth:
+        type: http
+        scheme: basic
+tags:
+  - name: structure
+
+paths:  
+  /structures/categories:
+    get:
+      summary: 'returns all available categories for structures'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+                schema:
+                  type: array
+                  items:
+                    type: string
+                  example: ["sport", "technology", "everday"]
+  /structures/{category}:
+    parameters:
+        - name: category
+          required: true
+          description: 'valid category'
+          in: path
+          schema:
+            type: string
+    get:      
+      summary: returns names of current available structures in that category
+      responses:
+        '200':
+          description: OK, empty if no structures in that category
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '../models/structure/structure.yaml#/Structure'
+        '404':
+          description: 'category not found'
+    put:
+      summary: 'create new category'
+      responses:
+        '200':
+          description: 'Ok, category got created'
+        '400':
+          description: 'bad input, category with that name may already exists'
+        '501':
+          description: 'creation may failed due to server error'
+    delete:
+      summary: 'delete this category. category needs to be empty'
+      responses:
+        '200':
+          description: 'deletion worked'
+        '400':
+          description: 'deletion failed due to bad input, maybe there are still structures in that category'
+        '501':
+          description: 'deletion may failed due to server error'
+  /structures/{category}/{name}:
+    parameters:
+      - name: category
+        required: true
+        description: 'category the structure is assigned to'
+        in: path
+        schema:
+          type: string      
+      - name: name
+        description: 'name of the structure to get'
+        in: path
+        required: true
+        schema:
+          type: string      
+    get:
+      summary: returns a specific structure
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '../models/structure/structure.yaml#/Structure'
+        '404':
+          description: structure with this name not found
+    put:
+      requestBody:
+        description: 'create new structure'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../models/structure/structure.yaml#/Structure'
+      responses:
+        '200':
+          description: 'creation worked'
+        '400':
+          description: 'creation failed, structure with that name in that category probably exists already'
+        '501':
+          description: 'creation failed due to server error'
+    post:
+      requestBody:
+        description: 'update existing structure'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../models/structure/structure.yaml#/Structure'
+      responses:
+        '200':
+          description: 'update worked'
+        '400':
+          description: 'update failed, structure with that name in that category probably exists already'
+        '501':
+          description: 'update failed due to server error'
+    delete:
+      summary: 'delete this structure'
+      responses:
+        '200':
+          description: 'deletion worked'
+        '400':
+          description: 'deletion failed due to bad input'
+        '501':
+          description: 'deletion failed due to server error'
+        
+
+    
+
+      
+    
+  

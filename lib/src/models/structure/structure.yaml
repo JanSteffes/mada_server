@@ -1,4 +1,4 @@
-structure:
+Structure:
   properties:
     name:
       type: string
@@ -9,6 +9,9 @@ structure:
     version:
       type: string
       description: 'versioncode of this structure'
+    category:
+      type: string
+      description: 'to which category this structure belongs'
     # contents:
-    #   $ref: 'content.yaml#/content'
+    #   $ref: 'content.yaml#/Content'
     #   description: 'contentfields of this structure' 

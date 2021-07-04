@@ -1,5 +1,4 @@
-# base for everything to be shown
-widget:
+Widget:
   description: 'base for everything to be shown'
   properties:
     name:

@@ -1,0 +1,39 @@
+# openapi: 3.0.0
+# info:
+#   version: 0.1.0
+#   title: Manage content 
+#   description: api to manage contents
+#   x-dart-name: content_management
+# servers:
+#   - url: 'http://steffes.xyz'
+#     description: prod server
+#   - url: "http://localhost:8080"
+#     description: local debug server
+
+# paths:
+#   /hello/{name}:
+#     parameters:
+#       - name: name
+#         in: path
+#         required: true
+#         schema:
+#           type: string
+#     get:
+#       summary: hello
+#       responses:
+#         '200':
+#           description: OK
+#           content:
+#             application/json:
+#               schema:
+#                 $ref: '#/components/schemas/HelloResponse'
+# components:
+#   schemas:
+#     HelloResponse:
+#       properties:
+#         message:
+#           type: string
+#           description: 'The Hello World greeting ;-)'
+#         random_number:
+#           type: integer
+#           description: 'Some random nummer'
